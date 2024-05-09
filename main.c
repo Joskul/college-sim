@@ -17,7 +17,7 @@ int main()
 		.message = "Fight the god.",
 		.sMessage = "You fought with the god",
 		.energy = 20,
-		.success = 100,
+		.success = 1,
 		.dest = NULL};
 	path p2 = {
 		.message = "RUN!!!",
@@ -55,15 +55,15 @@ int main()
 		.message = "You have encountered the god, what would you do?",
 		.choicesCount = 2,
 		.choices = pathList,
-		.timeout = -1};
+		.timeout = 5};
 
 	path p = renderEvent(e);
 
-	if (p.success >= 3)
+	if (p.success <= 1)
 	{
 		printf(ANSI_COLOR_GREEN "%s" ANSI_COLOR_RESET, p.sMessage);
 	}
-	else if (p.success >= 1)
+	else if (p.success <= 2)
 	{
 		printf("%s", p.sMessage);
 	}

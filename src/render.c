@@ -52,6 +52,7 @@ path renderEvent(const event e)
     }
 
     double progress = 1.0;
+    const double interval = 0.01;
     while (progress > 0)
     {
         // input handling
@@ -68,7 +69,7 @@ path renderEvent(const event e)
         if (e.timeout > 0)
         {
             printProgress(progress, e.timeout);
-            progress -= 0.01;
+            progress -= interval;
             usleep(10000 * e.timeout);
             system("@cls||clear");
         }
