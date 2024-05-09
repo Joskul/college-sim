@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include <string.h>
 #include <unistd.h>
@@ -10,6 +11,14 @@
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
 
+#define ANSI_COLOR_RED "\x1b[31m"
+#define ANSI_COLOR_GREEN "\x1b[32m"
+#define ANSI_COLOR_YELLOW "\x1b[33m"
+#define ANSI_COLOR_BLUE "\x1b[34m"
+#define ANSI_COLOR_MAGENTA "\x1b[35m"
+#define ANSI_COLOR_CYAN "\x1b[36m"
+#define ANSI_COLOR_RESET "\x1b[0m"
+
 void printProgress(double progress, double max)
 {
     int val = (int)(progress * max);
@@ -20,7 +29,7 @@ void printProgress(double progress, double max)
 }
 
 // Render string with delayed time (seconds)
-void delayedRender(const char *str, const int time)
+void delayedRenderLine(const char *str, const int time)
 {
     while (*str != '\0')
     {
@@ -32,19 +41,31 @@ void delayedRender(const char *str, const int time)
     }
 }
 
-path renderEvent(const event e)
+// Render string with delayed time (seconds)
+void delayedRenderText(const char *str, const double time)
 {
-    delayedRender(e.scene, 3);
+    int counter = 0;
+    while (*str != '\0')
+    {
+        printf("%c", *(str++));
+        counter++;
+        usleep(time * 10000);
+    }
+}
+
+action renderEvent(const event e)
+{
+    delayedRenderLine(e.scene, 3);
     system("@cls||clear");
 
-    char *choicesBox = malloc((e.choicesCount * 255 + 16) * sizeof(char));
+    char *choicesBox = malloc((e.aCount * 255 + 16) * sizeof(char));
     choicesBox[0] = 0;
 
-    for (int i = 0; i < e.choicesCount; i++)
+    for (int i = 0; i < e.aCount; i++)
     {
         char index[] = {i + '1', '.', ' ', 0};
         strcat(choicesBox, index);
-        strcat(choicesBox, e.choices[i].message);
+        strcat(choicesBox, e.actions[i].message);
         strcat(choicesBox, "\n");
     }
 
@@ -56,8 +77,8 @@ path renderEvent(const event e)
         if (_kbhit())
         {
             int choice = _getch() - '0';
-            if (choice >= 1 && choice <= e.choicesCount)
-                return e.choices[choice - 1];
+            if (choice >= 1 && choice <= e.aCount)
+                return e.actions[choice - 1];
         }
 
         printf("%s\n", e.scene);
@@ -73,14 +94,38 @@ path renderEvent(const event e)
         else
         {
             int choice = getch() - '0';
-            if (choice >= 1 && choice <= e.choicesCount)
+            if (choice >= 1 && choice <= e.aCount)
             {
                 system("@cls||clear");
-                return e.choices[choice - 1];
+                return e.actions[choice - 1];
             }
         }
     }
 
     free(choicesBox);
-    return e.choices[0];
+    return e.actions[0];
+}
+
+event *renderAction(const action act)
+{
+    char *str = malloc((strlen(act.sMessage) * 64) * sizeof(char));
+
+    if (act.success <= 1)
+    {
+        sprintf(str, ANSI_COLOR_GREEN "%s" ANSI_COLOR_RESET, act.sMessage);
+    }
+    else if (act.success <= 2)
+    {
+        sprintf(str, "%s", act.sMessage);
+    }
+    else
+    {
+        sprintf(str, ANSI_COLOR_RED "%s" ANSI_COLOR_RESET, act.sMessage);
+    }
+    delayedRenderText(str, 5);
+    sleep(1);
+
+    free(str);
+
+    return act.dest;
 }

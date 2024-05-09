@@ -4,7 +4,9 @@
 #include "event.h"
 
 void printProgress(double percentage, double max);
-void delayedRender(const char *str, const int time);
-path renderEvent(const event e);
+void delayedRenderLine(const char *str, const int time);
+void delayedRenderText(const char *str, const double time);
+action renderEvent(const event e);
+event *renderAction(const action p);
 
 #endif /* RENDER_H */
