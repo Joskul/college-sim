@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.5.0)
 
 #
 # Common settings
@@ -28,14 +28,14 @@ install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION /usr/local/lib)
 #
 # Second project (executable)
 #
-project(a.out)
+project(Game)
 # to build executable target with name a.out
 add_executable(${CMAKE_PROJECT_NAME} "main.c" ${LIB_SOURCES})
 
 #
 # Second project (test executable)
 #
-project(test.out)
+project(Test)
 add_executable(${CMAKE_PROJECT_NAME} "tests/main.c" ${LIB_SOURCES})
 
 # Extra

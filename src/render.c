@@ -10,13 +10,10 @@
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
 
-#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
-#define PBWIDTH 60
-
-void printProgress(double percentage, double max)
+void printProgress(double progress, double max)
 {
-    int val = (int)(percentage * max);
-    int lpad = (int)(percentage * PBWIDTH);
+    int val = (int)(progress * max);
+    int lpad = (int)(progress * PBWIDTH);
     int rpad = PBWIDTH - lpad;
     printf("\r%3ds % [%.*s%*s]", val, lpad, PBSTR, rpad, "");
     fflush(stdout);
