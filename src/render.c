@@ -53,7 +53,7 @@ void delayedRenderText(const char *str, const double time)
     }
 }
 
-action renderEvent(const event e)
+action renderEvent(const event e, const gameData gd)
 {
     delayedRenderLine(e.scene, 3);
     system("@cls||clear");
@@ -81,6 +81,10 @@ action renderEvent(const event e)
                 return e.actions[choice - 1];
         }
 
+        for (int i = 0; i < DATA_INSTANCE; i++)
+        {
+            printf("%s : %d", gd.label[i], gd.data[i]);
+        }
         printf("%s\n", e.scene);
         printf("%s\n", e.message);
         printf("%s\n", choicesBox);
@@ -106,7 +110,7 @@ action renderEvent(const event e)
     return e.actions[0];
 }
 
-event *renderAction(const action act)
+int renderAction(const action act, const gameData gd)
 {
     char *str = malloc((strlen(act.sMessage) * 64) * sizeof(char));
 
@@ -128,5 +132,5 @@ event *renderAction(const action act)
 
     free(str);
 
-    return act.dest;
+    return act.destID;
 }

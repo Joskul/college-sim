@@ -4,6 +4,8 @@
 typedef struct action action;
 typedef struct event event;
 
+#include "gameInstance.h"
+
 typedef struct event
 {
     char *scene;     // ASCII art of the scene
@@ -15,11 +17,11 @@ typedef struct event
 
 typedef struct action
 {
-    char *message;  // Choice message
-    char *sMessage; // Summary message
-    int energy;     // Energy usage
-    int success;    // Success rate for Dijkstra
-    event *dest;    // Next event
+    char *message;           // Choice message
+    char *sMessage;          // Summary message
+    int data[DATA_INSTANCE]; // Energy usage
+    int success;             // Success rate for Dijkstra
+    int destID;              // Next event
 } action;
 
 #endif /* EVENT_H */

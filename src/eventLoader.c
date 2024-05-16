@@ -79,9 +79,12 @@ event parseEvent(FILE *file)
     {
         e.actions[i].message = parseString(file);
         e.actions[i].sMessage = parseString(file);
-        e.actions[i].energy = parseInt(file);
+        for (int j = 0; j < DATA_INSTANCE; j++)
+        {
+            e.actions[i].data[j] = parseInt(file);
+        }
         e.actions[i].success = parseInt(file);
-        e.actions[i].dest = parseInt(file);
+        e.actions[i].destID = parseInt(file);
     }
     return e;
 }
