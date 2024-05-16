@@ -85,11 +85,11 @@ action renderEvent(const event e, const gameData gd)
                 return e.actions[choice - 1];
         }
 
-        for (int i = 0; i < DATA_INSTANCE; i++)
+        for (int i = 0; i < N_ATTRIBUTE; i++)
         {
-            printf("%s : %d", gd.label[i], gd.data[i]);
+            printf("%s : %d ", gd.label[i], gd.data[i]);
         }
-        printf("%s\n", e.scene);
+        printf("\n%s\n", e.scene);
         printf("%s\n", e.message);
         printf("%s\n", choicesBox);
         if (e.timeout > 0)
@@ -107,6 +107,12 @@ action renderEvent(const event e, const gameData gd)
                 system("@cls||clear");
                 return e.actions[choice - 1];
             }
+        }
+
+        if (e.aCount == 0)
+        {
+            sleep(1);
+            return;
         }
     }
 

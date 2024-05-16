@@ -17,11 +17,11 @@ typedef struct event
 
 typedef struct action
 {
-    char *message;           // Choice message
-    char *sMessage;          // Summary message
-    int data[DATA_INSTANCE]; // Energy usage
-    int success;             // Success rate for Dijkstra
-    int destID;              // Next event
+    char *message;         // Choice message
+    char *sMessage;        // Summary message
+    int data[N_ATTRIBUTE]; // Energy usage
+    int success;           // Success rate for Dijkstra
+    int destID;            // Next event
 } action;
 
 #endif /* EVENT_H */

@@ -79,7 +79,7 @@ event parseEvent(FILE *file)
     {
         e.actions[i].message = parseString(file);
         e.actions[i].sMessage = parseString(file);
-        for (int j = 0; j < DATA_INSTANCE; j++)
+        for (int j = 0; j < N_ATTRIBUTE; j++)
         {
             e.actions[i].data[j] = parseInt(file);
         }

@@ -1,20 +1,14 @@
 #ifndef GAMEINSTANCE_H
 #define GAMEINSTANCE_H
 
-#define DATA_INSTANCE 1
+#define N_ATTRIBUTE 1
 #include "event.h"
-
-typedef struct gameConfig
-{
-    int startID;
-    int endID;
-} gameConfig;
 
 typedef struct gameData
 {
     // 1 -> Player Energy
-    char label[DATA_INSTANCE][256];
-    int data[DATA_INSTANCE];
+    char label[N_ATTRIBUTE][256];
+    int data[N_ATTRIBUTE];
 } gameData;
 
 typedef struct gameInstance
