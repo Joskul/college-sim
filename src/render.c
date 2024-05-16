@@ -64,8 +64,12 @@ action renderEvent(const event e, const gameData gd)
     for (int i = 0; i < e.aCount; i++)
     {
         char index[] = {i + '1', '.', ' ', 0};
+        char stat[32];
+
+        sprintf(stat, " (%d Energy)", e.actions[i].data[0]);
         strcat(choicesBox, index);
         strcat(choicesBox, e.actions[i].message);
+        strcat(choicesBox, stat);
         strcat(choicesBox, "\n");
     }
 

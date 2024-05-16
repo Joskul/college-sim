@@ -4,6 +4,12 @@
 #define DATA_INSTANCE 1
 #include "event.h"
 
+typedef struct gameConfig
+{
+    int startID;
+    int endID;
+} gameConfig;
+
 typedef struct gameData
 {
     // 1 -> Player Energy
