@@ -124,6 +124,7 @@ event *renderAction(const action act)
     }
     delayedRenderText(str, 5);
     sleep(1);
+    system("@cls||clear");
 
     free(str);
 

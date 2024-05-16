@@ -8,9 +8,9 @@ typedef struct event
 {
     char *scene;     // ASCII art of the scene
     char *message;   // Event message
+    int timeout;     // Timeout in seconds // Default : -1 // If timeout go to choice 0 *Optional*
     action *actions; // Array of actions
     int aCount;      // Number of actions available
-    int timeout;     // Timeout in seconds // Default : -1 // If timeout go to choice 0 *Optional*
 } event;
 
 typedef struct action
