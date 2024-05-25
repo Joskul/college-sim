@@ -12,6 +12,7 @@ gameInstance initGame()
     g.currentEventID = 0;
     g.eventList = loadEvents("./events", &eventCount);
     strcpy(g.data.label[0], "ENERGY");
+    g.data.data[0] = 100;
 
     return g;
 }

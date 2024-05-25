@@ -55,6 +55,7 @@ void delayedRenderText(const char *str, const double time)
 
 action renderEvent(const event e, const gameData gd)
 {
+    printf("\n");
     delayedRenderLine(e.scene, 3);
     system("@cls||clear");
 
@@ -66,9 +67,18 @@ action renderEvent(const event e, const gameData gd)
         char index[] = {i + '1', '.', ' ', 0};
         char stat[32];
 
-        sprintf(stat, " (%d Energy)", e.actions[i].data[0]);
+        sprintf(stat, ANSI_COLOR_YELLOW " (%d Energy)" ANSI_COLOR_RESET, e.actions[i].data[0]);
         strcat(choicesBox, index);
+        if (e.actions[i].success == 1)
+        {
+            strcat(choicesBox, ANSI_COLOR_GREEN);
+        }
+        else if (e.actions[i].success == 3)
+        {
+            strcat(choicesBox, ANSI_COLOR_RED);
+        }
         strcat(choicesBox, e.actions[i].message);
+        strcat(choicesBox, ANSI_COLOR_RESET);
         strcat(choicesBox, stat);
         strcat(choicesBox, "\n");
     }
@@ -87,7 +97,7 @@ action renderEvent(const event e, const gameData gd)
 
         for (int i = 0; i < N_ATTRIBUTE; i++)
         {
-            printf("%s : %d ", gd.label[i], gd.data[i]);
+            printf(ANSI_COLOR_YELLOW "%s : %d " ANSI_COLOR_RESET, gd.label[i], gd.data[i]);
         }
         printf("\n%s\n", e.scene);
         printf("%s\n", e.message);
