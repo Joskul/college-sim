@@ -17,6 +17,7 @@
 #define ANSI_COLOR_BLUE "\x1b[34m"
 #define ANSI_COLOR_MAGENTA "\x1b[35m"
 #define ANSI_COLOR_CYAN "\x1b[36m"
+#define ANSI_COLOR_GREY "\x1b[90m"
 #define ANSI_COLOR_RESET "\x1b[0m"
 
 void printProgress(double progress, double max)
@@ -59,6 +60,8 @@ action renderEvent(const event e, const gameData gd)
     delayedRenderLine(e.scene, 3);
     system("@cls||clear");
 
+    // printEvent(e);
+
     char *choicesBox = malloc((e.aCount * 255 + 16) * sizeof(char));
     choicesBox[0] = 0;
 
@@ -66,17 +69,37 @@ action renderEvent(const event e, const gameData gd)
     {
         char index[] = {i + '1', '.', ' ', 0};
         char stat[32];
+        int meetsCondition = 1;
 
-        sprintf(stat, ANSI_COLOR_YELLOW " (%d Energy)" ANSI_COLOR_RESET, e.actions[i].data[0]);
-        strcat(choicesBox, index);
-        if (e.actions[i].success == 1)
+        for (int j = 0; j < N_ATTRIBUTE; j++)
         {
-            strcat(choicesBox, ANSI_COLOR_GREEN);
+            if (gd.data[j] < e.actions[i].condition[j])
+            {
+                meetsCondition = 0;
+                break;
+            }
         }
-        else if (e.actions[i].success == 3)
+
+        if (meetsCondition)
         {
-            strcat(choicesBox, ANSI_COLOR_RED);
+            sprintf(stat, ANSI_COLOR_YELLOW " (%d Energy)" ANSI_COLOR_RESET, e.actions[i].data[0]);
+            strcat(choicesBox, index);
+            if (e.actions[i].success == 1)
+            {
+                strcat(choicesBox, ANSI_COLOR_GREEN);
+            }
+            else if (e.actions[i].success == 3)
+            {
+                strcat(choicesBox, ANSI_COLOR_RED);
+            }
         }
+        else
+        {
+            sprintf(stat, ANSI_COLOR_GREY " (%d Energy)" ANSI_COLOR_RESET, e.actions[i].data[0]);
+            strcat(choicesBox, ANSI_COLOR_GREY);
+            strcat(choicesBox, index);
+        }
+
         strcat(choicesBox, e.actions[i].message);
         strcat(choicesBox, ANSI_COLOR_RESET);
         strcat(choicesBox, stat);
@@ -87,12 +110,28 @@ action renderEvent(const event e, const gameData gd)
     const double interval = 0.01;
     while (progress > 0)
     {
-        // input handling
+        // Input handling
         if (_kbhit())
         {
             int choice = _getch() - '0';
             if (choice >= 1 && choice <= e.aCount)
-                return e.actions[choice - 1];
+            {
+                int meetsCondition = 1;
+                for (int j = 0; j < N_ATTRIBUTE; j++)
+                {
+                    if (gd.data[j] < e.actions[choice - 1].condition[j])
+                    {
+                        meetsCondition = 0;
+                        break;
+                    }
+                }
+
+                if (meetsCondition)
+                {
+                    free(choicesBox);
+                    return e.actions[choice - 1];
+                }
+            }
         }
 
         for (int i = 0; i < N_ATTRIBUTE; i++)
@@ -114,15 +153,31 @@ action renderEvent(const event e, const gameData gd)
             int choice = getch() - '0';
             if (choice >= 1 && choice <= e.aCount)
             {
-                system("@cls||clear");
-                return e.actions[choice - 1];
+                int meetsCondition = 1;
+                for (int j = 0; j < N_ATTRIBUTE; j++)
+                {
+                    if (gd.data[j] < e.actions[choice - 1].condition[j])
+                    {
+                        meetsCondition = 0;
+                        break;
+                    }
+                }
+
+                if (meetsCondition)
+                {
+                    system("@cls||clear");
+                    free(choicesBox);
+                    return e.actions[choice - 1];
+                }
             }
         }
 
         if (e.aCount == 0)
         {
             sleep(1);
-            return;
+            free(choicesBox);
+            action emptyAction = {"", "", {0}, {""}, {0}, 0, 0};
+            return emptyAction;
         }
     }
 

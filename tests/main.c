@@ -1,7 +1,8 @@
-#include <stdlib.h>
-#include <stdio.h>
-int main(void)
+#include "gameInstance.h"
+
+int main()
 {
-	puts("Test()");
+	gameInstance g = initGame();
+	// Go(&g);
 	return 0;
 }

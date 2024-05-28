@@ -1,16 +1,16 @@
-#ifndef EVENTLOADER_H
-#define EVENTLOADER_H
+#ifndef EVENT_LOADER_H
+#define EVENT_LOADER_H
 
-#include "event.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include "event.h"
 
-char *trim(char *str);
-char *parseScene(FILE *file);
-char *parseString(FILE *file);
-int parseInt(FILE *file);
-void freeEvent(event e);
-event parseEvent(FILE *file);
-event readEventFromFile(const char *filename);
-event *loadEvents(const char *folder, int *count);
+// Function to load all events from a directory
+event *loadEvents(const char *directory, int *eventCount);
 
-#endif /* EVENTLOADER_H */
+void freeEvents(event *events);
+
+#endif /* EVENT_LOADER_H */
