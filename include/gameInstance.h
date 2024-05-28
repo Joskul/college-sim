@@ -4,18 +4,16 @@
 #define N_ATTRIBUTE 1
 #include "event.h"
 
-typedef struct gameData
-{
-    // 1 -> Player Energy
-    char label[N_ATTRIBUTE][256];
-    int data[N_ATTRIBUTE];
-} gameData;
-
 typedef struct gameInstance
 {
     event *eventList;
+
+    int eventCount; // number of events
     int currentEventID;
-    gameData data;
+    int turnCount; // number of events occured
+
+    char dataLabel[N_ATTRIBUTE][256];
+    int data[N_ATTRIBUTE];
 } gameInstance;
 
 gameInstance initGame();

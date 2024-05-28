@@ -7,6 +7,7 @@
 
 #include "event.h"
 #include "render.h"
+#include "pathFinding.h"
 
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
@@ -54,7 +55,7 @@ void delayedRenderText(const char *str, const double time)
     }
 }
 
-action renderEvent(const event e, const gameData gd)
+action renderEvent(const event e, const gameInstance gd)
 {
     printf("\n");
     delayedRenderLine(e.scene, 3);
@@ -65,10 +66,13 @@ action renderEvent(const event e, const gameData gd)
     char *choicesBox = malloc((e.aCount * 255 + 16) * sizeof(char));
     choicesBox[0] = 0;
 
+    int suggestion = suggestAction(gd.currentEventID, gd.eventList);
+
     for (int i = 0; i < e.aCount; i++)
     {
         char index[] = {i + '1', '.', ' ', 0};
-        char stat[32];
+        char statBuf[32] = "\0";
+        char stats[32 * N_ATTRIBUTE] = "\0";
         int meetsCondition = 1;
 
         for (int j = 0; j < N_ATTRIBUTE; j++)
@@ -82,7 +86,11 @@ action renderEvent(const event e, const gameData gd)
 
         if (meetsCondition)
         {
-            sprintf(stat, ANSI_COLOR_YELLOW " (%d Energy)" ANSI_COLOR_RESET, e.actions[i].data[0]);
+            for (int j = 0; j < N_ATTRIBUTE; j++)
+            {
+                sprintf(statBuf, ANSI_COLOR_YELLOW " (%d %s)" ANSI_COLOR_RESET, e.actions[i].data[0], e.actions[i].dataLabel);
+                strcat(stats, statBuf);
+            }
             strcat(choicesBox, index);
             if (e.actions[i].success == 1)
             {
@@ -95,14 +103,22 @@ action renderEvent(const event e, const gameData gd)
         }
         else
         {
-            sprintf(stat, ANSI_COLOR_GREY " (%d Energy)" ANSI_COLOR_RESET, e.actions[i].data[0]);
+            for (int j = 0; j < N_ATTRIBUTE; j++)
+            {
+                sprintf(statBuf, ANSI_COLOR_YELLOW " (%d %s)" ANSI_COLOR_RESET, e.actions[i].data[0], e.actions[i].dataLabel);
+                strcat(stats, statBuf);
+            }
             strcat(choicesBox, ANSI_COLOR_GREY);
             strcat(choicesBox, index);
         }
 
         strcat(choicesBox, e.actions[i].message);
         strcat(choicesBox, ANSI_COLOR_RESET);
-        strcat(choicesBox, stat);
+        strcat(choicesBox, stats);
+        if (i == suggestion)
+        {
+            strcat(choicesBox, ANSI_COLOR_GREEN "*" ANSI_COLOR_RESET);
+        }
         strcat(choicesBox, "\n");
     }
 
@@ -136,7 +152,7 @@ action renderEvent(const event e, const gameData gd)
 
         for (int i = 0; i < N_ATTRIBUTE; i++)
         {
-            printf(ANSI_COLOR_YELLOW "%s : %d " ANSI_COLOR_RESET, gd.label[i], gd.data[i]);
+            printf(ANSI_COLOR_YELLOW "%s : %d " ANSI_COLOR_RESET, gd.dataLabel[i], gd.data[i]);
         }
         printf("\n%s\n", e.scene);
         printf("%s\n", e.message);
@@ -185,7 +201,7 @@ action renderEvent(const event e, const gameData gd)
     return e.actions[0];
 }
 
-int renderAction(const action act, const gameData gd)
+int renderAction(const action act, const gameInstance gd)
 {
     char *str = malloc((strlen(act.sMessage) * 64) * sizeof(char));
 

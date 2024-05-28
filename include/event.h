@@ -9,6 +9,7 @@ typedef struct event event;
 
 typedef struct event
 {
+    int id;          // Event ID
     char *scene;     // ASCII art of the scene
     char *message;   // Event message
     int timeout;     // Timeout in seconds // Default : -1 // If timeout go to choice 0 *Optional*

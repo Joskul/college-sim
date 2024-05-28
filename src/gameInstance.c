@@ -8,11 +8,10 @@
 gameInstance initGame()
 {
     gameInstance g;
-    int eventCount = 0;
     g.currentEventID = 0;
-    g.eventList = loadEvents("./events", &eventCount);
-    strcpy(g.data.label[0], "ENERGY");
-    g.data.data[0] = 100;
+    g.eventList = loadEvents("./events", &g.eventCount);
+    strcpy(g.dataLabel[0], "ENERGY");
+    g.data[0] = 100;
 
     return g;
 }
@@ -21,7 +20,7 @@ void updateGameData(gameInstance *g, action p)
 {
     for (int i = 0; i < N_ATTRIBUTE; i++)
     {
-        g->data.data[i] += p.data[i];
+        g->data[i] += p.data[i];
     }
     g->currentEventID = p.destID;
 }
@@ -32,14 +31,14 @@ void Go(gameInstance *g)
     while (flag)
     {
 
-        action p = renderEvent(g->eventList[g->currentEventID], g->data);
+        action p = renderEvent(g->eventList[g->currentEventID], *g);
         if (g->eventList[g->currentEventID].aCount == 0)
         {
             flag = 0;
             break;
         }
         updateGameData(g, p);
-        renderAction(p, g->data);
+        renderAction(p, *g);
     }
     freeEvents(g->eventList);
 }

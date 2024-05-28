@@ -192,10 +192,18 @@ action *parseActions(FILE *file, int aCount)
     return actions;
 }
 
-event parseEvent(FILE *file)
+event parseEvent(FILE *file, int id)
 {
     event evt;
     memset(&evt, 0, sizeof(event));
+
+    // Default values
+    evt.id = id;
+    evt.aCount = 0;
+    evt.timeout = -1;
+    evt.message = NULL;
+    evt.actions = NULL;
+    evt.scene = NULL;
 
     char buffer[256];
     while (fgets(buffer, sizeof(buffer), file) != NULL)
@@ -270,7 +278,7 @@ event *loadEvents(const char *directory, int *eventCount)
                 capacity *= 2;
                 events = realloc(events, capacity * sizeof(event));
             }
-            events[*eventCount] = parseEvent(file);
+            events[*eventCount] = parseEvent(file, *eventCount);
             // printEvent(events[*eventCount]);
             (*eventCount)++;
             fclose(file);
